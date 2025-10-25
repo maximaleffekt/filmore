@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Materialübersicht</h1>
+
+    <h2>Kameras</h2>
+    {% if cameras %}
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Seriennummer</th>
+                <th>Verschlusszeit (min - max)</th>
+            </tr>
+            {% for c in cameras %}
+            <tr>
+                <td>{{ c.name }}</td>
+                <td>{{ c.seriennummer }}</td>
+                <td>{{ c.min_shutter_speed or "-" }} – {{ c.max_shutter_speed or "-" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Keine Kameras vorhanden.</p>
+    {% endif %}
+
+    <h2>Objektive</h2>
+    {% if lenses %}
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Brennweite</th>
+                <th>Blende</th>
+            </tr>
+            {% for l in lenses %}
+            <tr>
+                <td>{{ l.name }}</td>
+                <td>{{ l.focal_length }}</td>
+                <td>{{ l.min_apperture or "-" }} – {{ l.max_apperture or "-" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Keine Objektive vorhanden.</p>
+    {% endif %}
+
+    <h2>Filter</h2>
+    {% if filters %}
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Typ</th>
+            </tr>
+            {% for f in filters %}
+            <tr>
+                <td>{{ f.name }}</td>
+                <td>{{ f.filter_type }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>Keine Filter vorhanden.</p>
+    {% endif %}
+</div>
+{% endblock %}

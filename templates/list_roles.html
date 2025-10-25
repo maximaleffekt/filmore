@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Alle Rollen</h1>
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Hersteller</th>
+                <th>Film</th>
+                <th>ISO</th>
+                <th>Bilder</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for role in roles %}
+            <tr>
+                <td>{{ role.name }}</td>
+                <td>{{ role.film_manufacturer }}</td>
+                <td>{{ role.film_type }}</td>
+                <td>{{ role.iso }}</td>
+                <td>{{ role.images|length }}</td>
+                <td>
+                    <a href="{{ url_for('view_role', role_id=role.id) }}">Ansehen</a> |
+                    <a href="{{ url_for('export_role_json', role_id=role.id) }}">Export</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<a class="btn" href="{{ url_for('add_role') }}">Neue Rolle anlegen</a>
+{% endblock %}
+

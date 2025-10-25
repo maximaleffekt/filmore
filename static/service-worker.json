@@ -1,0 +1,23 @@
+const CACHE_NAME = 'film-manager-cache-v1';
+const urlsToCache = [
+    '/',
+    '/static/style.css',
+    '/static/app.js'
+];
+
+// Installation: Cache die Grund-Assets
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+        .then(cache => cache.addAll(urlsToCache))
+    );
+});
+
+// Fetch: zuerst Cache, dann Netzwerk
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        caches.match(event.request)
+        .then(response => response || fetch(event.request))
+    );
+});
+

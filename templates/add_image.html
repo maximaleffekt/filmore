@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<main>
+<h1>Bild zu Rolle "{{ role.name }}" hinzufügen</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+
+    <div class="form-group">
+        {{ form.filename.label }}<br>{{ form.filename(class="input") }}
+    </div>
+    <div class="form-group">
+        {{ form.shutter_speed.label }}<br>{{ form.shutter_speed(class="input") }}
+    </div>
+    <div class="form-group">
+        {{ form.aperture.label }}<br>{{ form.aperture(class="input") }}
+    </div>
+    <div class="form-group">
+        {{ form.camera.label }}<br>{{ form.camera(class="input") }}
+    </div>
+    <div class="form-group">
+        {{ form.lens.label }}<br>{{ form.lens(class="input") }}
+    </div>
+    <div class="form-group">
+        {{ form.filter.label }}<br>{{ form.filter(class="input") }}
+    </div>
+    <div class="form-group">
+        {{ form.image_file.label }}<br>{{ form.image_file(class="input") }}
+    </div>
+
+    {{ form.submit(class="btn") }}
+</form>
+
+<a href="{{ url_for('role_view', role_id=role.id) }}">Zurück zur Rolle</a>
+</main>
+{% endblock %}

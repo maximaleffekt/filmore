@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<main>
+<h1>Deine Rollen</h1>
+<ul style="list-style: none; padding: 0; margin-bottom: 1rem;">
+<a href="{{ url_for('add_role') }}" class="btn">+ Neue Rolle</a>
+</ul>
+<p></p>
+{% if roles %}
+  <ul style="list-style: none; padding: 0;">
+    {% for role in roles %}
+      <li style="margin-bottom: 1rem;">
+        <a class="btn" href="{{ url_for('role_view', role_id=role.id) }}" style="margin-right: 0.5rem;">
+          {{ role.name }}
+        </a>
+        <a class="btn" href="{{ url_for('export_role_json', role_id=role.id) }}">
+          Exportiere JSON
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Du hast noch keine Rollen angelegt.</p>
+{% endif %}
+{% endblock %}

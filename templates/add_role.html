@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Neue Rolle anlegen</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div>{{ form.name.label }}<br>{{ form.name(class="input") }}</div>
+    <div>{{ form.film_manufacturer.label }}<br>{{ form.film_manufacturer(class="input") }}</div>
+    <div>{{ form.film_type.label }}<br>{{ form.film_type(class="input") }}</div>
+    <div>{{ form.iso.label }}<br>{{ form.iso(class="input") }}</div>
+    <div>{{ form.submit(class="btn") }}</div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const manufacturerSelect = document.querySelector('select[name="film_manufacturer"]');
+    const filmTypeSelect = document.querySelector('select[name="film_type"]');
+
+    manufacturerSelect.addEventListener('change', function() {
+        const manufacturer = this.value;
+        if (!manufacturer) {
+            filmTypeSelect.innerHTML = '<option value="">– Wähle zuerst Hersteller –</option>';
+            return;
+        }
+        fetch(`/get_films/${manufacturer}`)
+            .then(res => res.json())
+            .then(data => {
+                filmTypeSelect.innerHTML = '';
+                if (data.length === 0) {
+                    filmTypeSelect.innerHTML = '<option value="">Keine Filme verfügbar</option>';
+                } else {
+                    data.forEach(film => {
+                        const option = document.createElement('option');
+                        option.value = film;
+                        option.text = film;
+                        filmTypeSelect.appendChild(option);
+                    });
+                    filmTypeSelect.value = data[0];
+                }
+            });
+    });
+
+    if (manufacturerSelect.value) {
+        manufacturerSelect.dispatchEvent(new Event('change'));
+    }
+});
+</script>
+{% endblock %}

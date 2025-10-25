@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+<main>
+    {% if role %}
+        <h1>Rolle: {{ role.name }}</h1>
+        <p>Hersteller: {{ role.film_manufacturer }}</p>
+        <p>Filmtyp: {{ role.film_type }}</p>
+        <p>ISO: {{ role.iso }}</p>
+
+
+        {% if role.images|length == 0 %}
+            <p>Keine Bilder auf dieser Rolle.</p>
+        {% else %}
+            <h2>Bilder</h2>
+            <ul>
+                {% for img in role.images %}
+                <li class="card">
+                    <strong>Frame {{ img.frame_number or loop.index }}:</strong> {{ img.filename }}<br>
+                    <small>Verschlusszeit: {{ img.shutter_speed }} | Blende: {{ img.aperture }}</small><br>
+                    {% if img.image_file %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ img.image_file) }}" 
+                             alt="Bild {{ img.frame_number }}" style="max-height:150px; margin-top:10px;">
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <a class="btn" href="{{ url_for('add_image', role_id=role.id) }}">Neues Bild hinzufügen</a>
+    {% else %}
+        <p>Rolle nicht gefunden.</p>
+    {% endif %}
+</main>
+{% endblock %}

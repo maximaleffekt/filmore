@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<main>
+<h1>Kamera hinzufügen</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.name.label }} {{ form.name(class="input") }}<br>
+    {{ form.min_shutter_speed.label }} {{ form.min_shutter_speed(class="input") }}<br>
+    {{ form.max_shutter_speed.label }} {{ form.max_shutter_speed(class="input") }}<br>
+    {{ form.seriennummer.label }} {{ form.seriennummer(class="input") }}<br>
+    {{ form.submit(class="btn") }}
+</form>
+</main>
+{% endblock %}
+
