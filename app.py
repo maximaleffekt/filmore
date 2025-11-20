@@ -11,7 +11,7 @@ from models import db, User, Role, Image, Camera, Lens, Filter
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = ''  # in prod: set via env var
+app.config['SECRET_KEY'] = 'asd'  # in prod: set via env var
 # Cookie hardening options (für Entwicklung: SESSION_COOKIE_SECURE=False wenn kein HTTPS)
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SECURE'] = True
