@@ -2,10 +2,11 @@ import os
 
 from flask import Flask, render_template, redirect, url_for, request, jsonify, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from forms import RoleForm, CameraForm, LensForm, FilterForm, ImageForm, LoginForm, RegisterForm
-from models import db, User, Role, Image, Camera, Lens, Filter
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+
+from forms import RoleForm, CameraForm, LensForm, ImageForm, LoginForm, RegisterForm
+from models import db, User, Role, Image, Camera, Lens, Filter
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
