@@ -1,14 +1,11 @@
 import os
-import json
-from flask import Flask, render_template, redirect, url_for, request, jsonify, flash, Response
 
+from flask import Flask, render_template, redirect, url_for, request, jsonify, flash
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from forms import RoleForm, CameraForm, LensForm, FilterForm, ImageForm, LoginForm, RegisterForm
+from models import db, User, Role, Image, Camera, Lens, Filter
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-
-from models import db, User, Role, Image, Camera, Lens, Filter
-from forms import RoleForm, CameraForm, LensForm, FilterForm, ImageForm, LoginForm, RegisterForm
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -133,22 +130,6 @@ def index():
     # nur Rollen des aktuellen Benutzers zeigen
     roles = Role.query.filter_by(user_id=current_user.id).all()
     return render_template('index.html', roles=roles)
-    form = RoleForm()
-    if form.validate_on_submit():
-        role = Role(
-            name=form.name.data,
-            user_id=current_user.id,
-            film_manufacturer=form.film_manufacturer.data,
-            film_type=form.film_type.data,
-            iso=form.iso.data
-        )
-        db.session.add(role)
-        db.session.commit()
-        flash("Rolle hinzugefügt.", "success")
-        return redirect(url_for('index'))
-    else:
-        print("Form errors:", form.errors)  # Debug
-    return render_template('add_role.html', form=form)
 
 @app.route('/role/<int:role_id>')
 @login_required
@@ -296,31 +277,6 @@ def export_role_json(role_id):
     resp.headers['Content-Disposition'] = f'attachment; filename=role_{role.id}_export.json'
     return resp
 
-    # Nur Rollen des aktuellen Benutzers
-    role = Role.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
-    
-    images_data = []
-    for img in role.images:
-        images_data.append({
-            "frame_number": img.frame_number,
-            "filename": img.filename,
-            "shutter_speed": img.shutter_speed,
-            "aperture": img.aperture,
-            "camera": img.camera.name if img.camera else None,
-            "lens": img.lens.name if img.lens else None,
-            "filter": img.filter.name if img.filter else None,
-            "image_file": img.image_file
-        })
-    
-    data = {
-        "role_name": role.name,
-        "images": images_data
-    }
-    
-    # JSON in Response zurückgeben
-    response = Response(json.dumps(data, indent=2), mimetype='application/json')
-    response.headers['Content-Disposition'] = f'attachment; filename=role_{role.id}_export.json'
-    return response
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)
