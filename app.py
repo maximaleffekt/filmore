@@ -145,9 +145,9 @@ def add_image(role_id):
     form = ImageForm()
 
     # Optionen inkl. None-Auswahl
-    form.camera.choices = [(0, '– Keine –')] + [(c.id, c.name) for c in Camera.query.all()]
-    form.lens.choices = [(0, '– Keine –')] + [(l.id, l.name) for l in Lens.query.all()]
-    form.filter.choices = [(0, '– Keine –')] + [(f.id, f.name) for f in Filter.query.all()]
+    form.camera.choices = [(0, '– Keine –')] + [(c.id, c.name) for c in Camera.query.filter_by(user_id=current_user.id)]
+    form.lens.choices = [(0, '– Keine –')] + [(l.id, l.name) for l in Lens.query.filter_by(user_id=current_user.id)]
+    form.filter.choices = [(0, '– Keine –')] + [(f.id, f.name) for f in Filter.query.filter_by(user_id=current_user.id)]
 
     if form.validate_on_submit():
         last_frame = Image.query.filter_by(role_id=role.id).order_by(Image.frame_number.desc()).first()
@@ -211,9 +211,9 @@ def edit_image(image_id):
     form = ImageForm(obj=image)
 
     # Dropdown-Optionen neu laden
-    form.camera.choices = [(0, "–")] + [(c.id, c.name) for c in Camera.query.all()]
-    form.lens.choices = [(0, "–")] + [(l.id, l.name) for l in Lens.query.all()]
-    form.filter.choices = [(0, "–")] + [(f.id, f.name) for f in Filter.query.all()]
+    form.camera.choices = [(0, "–")] + [(c.id, c.name) for c in Camera.query.filter_by(user_id=current_user.id)]
+    form.lens.choices = [(0, "–")] + [(l.id, l.name) for l in Lens.query.filter_by(user_id=current_user.id)]
+    form.filter.choices = [(0, "–")] + [(f.id, f.name) for f in Filter.query.filter_by(user_id=current_user.id)]
 
     if form.validate_on_submit():
         image.shutter_speed = form.shutter_speed.data
