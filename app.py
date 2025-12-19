@@ -185,7 +185,7 @@ def add_image(role_id):
 def add_camera():
     form = CameraForm()
     if form.validate_on_submit():
-        c = Camera(name=form.name.data, min_shutter_speed=form.min_shutter_speed.data, max_shutter_speed=form.max_shutter_speed.data, seriennummer=form.seriennummer.data, user_id=current_user.id)
+        c = Camera(name=form.name.data, min_shutter_speed=form.min_shutter_speed.data, max_shutter_speed=form.max_shutter_speed.data, serial_number=form.serial_number.data, user_id=current_user.id)
         db.session.add(c)
         db.session.commit()
         flash("Kamera hinzugefügt.", "success")
@@ -197,7 +197,7 @@ def add_camera():
 def add_lens():
     form = LensForm()
     if form.validate_on_submit():
-        l = Lens(name=form.name.data, focal_length=form.focal_length.data, min_apperture=form.min_apperture.data, max_apperture=form.max_apperture.data, seriennummer=form.seriennummer.data, user_id=current_user.id)
+        l = Lens(name=form.name.data, focal_length=form.focal_length.data, min_aperture=form.min_apperture.data, max_aperture=form.max_apperture.data, serial_number=form.serial_number.data, user_id=current_user.id)
         db.session.add(l)
         db.session.commit()
         flash("Objektiv hinzugefügt.", "success")

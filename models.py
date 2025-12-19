@@ -1,6 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-from flask_login import current_user
+from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
@@ -43,14 +42,16 @@ class Camera(db.Model):
     brand = db.Column(db.String(120))
     min_shutter_speed = db.Column(db.String(50))
     max_shutter_speed = db.Column(db.String(50))
-    seriennummer = db.Column(db.String(100))
+    serial_number = db.Column(db.String(100))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Lens(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
     focal_length = db.Column(db.String(50))
-    aperture = db.Column(db.String(50))
+    min_aperture = db.Column(db.String(50))
+    max_aperture = db.Column(db.String(50))
+    serial_number = db.Column(db.String(100))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class Filter(db.Model):
