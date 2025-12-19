@@ -197,7 +197,7 @@ def add_camera():
 def add_lens():
     form = LensForm()
     if form.validate_on_submit():
-        l = Lens(name=form.name.data, focal_length=form.focal_length.data, min_aperture=form.min_apperture.data, max_aperture=form.max_apperture.data, serial_number=form.serial_number.data, user_id=current_user.id)
+        l = Lens(name=form.name.data, focal_length=form.focal_length.data, min_aperture=form.min_aperture.data, max_aperture=form.max_aperture.data, serial_number=form.serial_number.data, user_id=current_user.id)
         db.session.add(l)
         db.session.commit()
         flash("Objektiv hinzugefügt.", "success")

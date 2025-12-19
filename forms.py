@@ -31,9 +31,9 @@ class CameraForm(FlaskForm):
 class LensForm(FlaskForm):
     name = StringField('Objektiv', validators=[DataRequired()])
     focal_length = StringField('Brennweite')
-    min_apperture = StringField('Min. Blende', validators=[DataRequired()])
-    max_apperture = StringField('Max. Blende', validators=[DataRequired()])
-    seriennummer = StringField('Seriennummer')
+    min_aperture = StringField('Min. Blende', validators=[DataRequired()])
+    max_aperture = StringField('Max. Blende', validators=[DataRequired()])
+    serial_number = StringField('Seriennummer')
     submit = SubmitField('Speichern')
 
 class FilterForm(FlaskForm):
