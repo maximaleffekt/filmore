@@ -5,8 +5,8 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
-from forms import RoleForm, CameraForm, LensForm, ImageForm, LoginForm, RegisterForm
-from models import db, User, Role, Image, Camera, Lens, Filter
+from forms import RollForm, CameraForm, LensForm, ImageForm, LoginForm, RegisterForm
+from models import db, User, Roll, Image, Camera, Lens, Filter
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -70,7 +70,7 @@ def login():
 @app.route('/roles')
 @login_required
 def list_roles():
-    roles = Role.query.filter_by(user_id=current_user.id).all()
+    roles = Roll.query.filter_by(user_id=current_user.id).all()
     return render_template('list_roles.html', roles=roles)
 
 @app.route('/logout')
@@ -98,7 +98,7 @@ def get_films(manufacturer):
 @app.route('/add_role', methods=['GET', 'POST'])
 @login_required
 def add_role():
-    form = RoleForm()
+    form = RollForm()
 
     # Dynamische Filmtyp-Choices für POST
     if request.method == 'POST':
@@ -107,7 +107,7 @@ def add_role():
         form.film_type.choices = [(f, f) for f in films]
 
     if form.validate_on_submit():
-        role = Role(
+        role = Roll(
             name=form.name.data,
             user_id=current_user.id,
             film_manufacturer=form.film_manufacturer.data,
@@ -129,25 +129,25 @@ def add_role():
 @login_required
 def index():
     # nur Rollen des aktuellen Benutzers zeigen
-    roles = Role.query.filter_by(user_id=current_user.id).all()
+    roles = Roll.query.filter_by(user_id=current_user.id).all()
     return render_template('index.html', roles=roles)
 
 @app.route('/role/<int:role_id>')
 @login_required
 def role_view(role_id):
-    role = Role.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
+    role = Roll.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
     return render_template('role.html', role=role)
 
 @app.route('/role/<int:role_id>/add_image', methods=['GET', 'POST'])
 @login_required
 def add_image(role_id):
-    role = Role.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
+    role = Roll.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
     form = ImageForm()
 
     # Optionen inkl. None-Auswahl
-    form.camera.choices = [(0, '– Keine –')] + [(c.id, c.name) for c in Camera.query.all()]
-    form.lens.choices = [(0, '– Keine –')] + [(l.id, l.name) for l in Lens.query.all()]
-    form.filter.choices = [(0, '– Keine –')] + [(f.id, f.name) for f in Filter.query.all()]
+    form.camera.choices = [(0, '– Keine –')] + [(c.id, c.name) for c in Camera.query.filter_by(user_id=current_user.id)]
+    form.lens.choices = [(0, '– Keine –')] + [(l.id, l.name) for l in Lens.query.filter_by(user_id=current_user.id)]
+    form.filter.choices = [(0, '– Keine –')] + [(f.id, f.name) for f in Filter.query.filter_by(user_id=current_user.id)]
 
     if form.validate_on_submit():
         last_frame = Image.query.filter_by(role_id=role.id).order_by(Image.frame_number.desc()).first()
@@ -185,7 +185,7 @@ def add_image(role_id):
 def add_camera():
     form = CameraForm()
     if form.validate_on_submit():
-        c = Camera(name=form.name.data, min_shutter_speed=form.min_shutter_speed.data, max_shutter_speed=form.max_shutter_speed.data, seriennummer=form.seriennummer.data, user_id=current_user.id)
+        c = Camera(name=form.name.data, min_shutter_speed=form.min_shutter_speed.data, max_shutter_speed=form.max_shutter_speed.data, serial_number=form.serial_number.data, user_id=current_user.id)
         db.session.add(c)
         db.session.commit()
         flash("Kamera hinzugefügt.", "success")
@@ -197,7 +197,7 @@ def add_camera():
 def add_lens():
     form = LensForm()
     if form.validate_on_submit():
-        l = Lens(name=form.name.data, focal_length=form.focal_length.data, min_apperture=form.min_apperture.data, max_apperture=form.max_apperture.data, seriennummer=form.seriennummer.data, user_id=current_user.id)
+        l = Lens(name=form.name.data, focal_length=form.focal_length.data, min_aperture=form.min_aperture.data, max_aperture=form.max_aperture.data, serial_number=form.serial_number.data, user_id=current_user.id)
         db.session.add(l)
         db.session.commit()
         flash("Objektiv hinzugefügt.", "success")
@@ -211,9 +211,9 @@ def edit_image(image_id):
     form = ImageForm(obj=image)
 
     # Dropdown-Optionen neu laden
-    form.camera.choices = [(0, "–")] + [(c.id, c.name) for c in Camera.query.all()]
-    form.lens.choices = [(0, "–")] + [(l.id, l.name) for l in Lens.query.all()]
-    form.filter.choices = [(0, "–")] + [(f.id, f.name) for f in Filter.query.all()]
+    form.camera.choices = [(0, "–")] + [(c.id, c.name) for c in Camera.query.filter_by(user_id=current_user.id)]
+    form.lens.choices = [(0, "–")] + [(l.id, l.name) for l in Lens.query.filter_by(user_id=current_user.id)]
+    form.filter.choices = [(0, "–")] + [(f.id, f.name) for f in Filter.query.filter_by(user_id=current_user.id)]
 
     if form.validate_on_submit():
         image.shutter_speed = form.shutter_speed.data
@@ -250,7 +250,7 @@ def materials():
 @app.route('/role/<int:role_id>/export_json')
 @login_required
 def export_role_json(role_id):
-    role = Role.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
+    role = Roll.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
 
     images_data = []
     for img in role.images:

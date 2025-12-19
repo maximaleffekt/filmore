@@ -3,7 +3,7 @@ from wtforms import StringField, SelectField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Length, EqualTo
 from flask_wtf.file import FileField, FileAllowed
 
-class RoleForm(FlaskForm):
+class RollForm(FlaskForm):
     name = StringField('Name der Rolle', validators=[DataRequired()])
     film_manufacturer = SelectField(
         'Hersteller',
@@ -31,9 +31,9 @@ class CameraForm(FlaskForm):
 class LensForm(FlaskForm):
     name = StringField('Objektiv', validators=[DataRequired()])
     focal_length = StringField('Brennweite')
-    min_apperture = StringField('Min. Blende', validators=[DataRequired()])
-    max_apperture = StringField('Max. Blende', validators=[DataRequired()])
-    seriennummer = StringField('Seriennummer')
+    min_aperture = StringField('Min. Blende', validators=[DataRequired()])
+    max_aperture = StringField('Max. Blende', validators=[DataRequired()])
+    serial_number = StringField('Seriennummer')
     submit = SubmitField('Speichern')
 
 class FilterForm(FlaskForm):
