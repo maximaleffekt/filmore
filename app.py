@@ -5,8 +5,8 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
-from forms import RoleForm, CameraForm, LensForm, ImageForm, LoginForm, RegisterForm
-from models import db, User, Role, Image, Camera, Lens, Filter
+from forms import RollForm, CameraForm, LensForm, ImageForm, LoginForm, RegisterForm
+from models import db, User, Roll, Image, Camera, Lens, Filter
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -70,7 +70,7 @@ def login():
 @app.route('/roles')
 @login_required
 def list_roles():
-    roles = Role.query.filter_by(user_id=current_user.id).all()
+    roles = Roll.query.filter_by(user_id=current_user.id).all()
     return render_template('list_roles.html', roles=roles)
 
 @app.route('/logout')
@@ -98,7 +98,7 @@ def get_films(manufacturer):
 @app.route('/add_role', methods=['GET', 'POST'])
 @login_required
 def add_role():
-    form = RoleForm()
+    form = RollForm()
 
     # Dynamische Filmtyp-Choices für POST
     if request.method == 'POST':
@@ -107,7 +107,7 @@ def add_role():
         form.film_type.choices = [(f, f) for f in films]
 
     if form.validate_on_submit():
-        role = Role(
+        role = Roll(
             name=form.name.data,
             user_id=current_user.id,
             film_manufacturer=form.film_manufacturer.data,
@@ -129,19 +129,19 @@ def add_role():
 @login_required
 def index():
     # nur Rollen des aktuellen Benutzers zeigen
-    roles = Role.query.filter_by(user_id=current_user.id).all()
+    roles = Roll.query.filter_by(user_id=current_user.id).all()
     return render_template('index.html', roles=roles)
 
 @app.route('/role/<int:role_id>')
 @login_required
 def role_view(role_id):
-    role = Role.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
+    role = Roll.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
     return render_template('role.html', role=role)
 
 @app.route('/role/<int:role_id>/add_image', methods=['GET', 'POST'])
 @login_required
 def add_image(role_id):
-    role = Role.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
+    role = Roll.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
     form = ImageForm()
 
     # Optionen inkl. None-Auswahl
@@ -250,7 +250,7 @@ def materials():
 @app.route('/role/<int:role_id>/export_json')
 @login_required
 def export_role_json(role_id):
-    role = Role.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
+    role = Roll.query.filter_by(id=role_id, user_id=current_user.id).first_or_404()
 
     images_data = []
     for img in role.images:

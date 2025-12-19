@@ -3,7 +3,7 @@ from wtforms import StringField, SelectField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Length, EqualTo
 from flask_wtf.file import FileField, FileAllowed
 
-class RoleForm(FlaskForm):
+class RollForm(FlaskForm):
     name = StringField('Name der Rolle', validators=[DataRequired()])
     film_manufacturer = SelectField(
         'Hersteller',

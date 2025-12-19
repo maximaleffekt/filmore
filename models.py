@@ -7,19 +7,16 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
-    roles = db.relationship('Role', backref='owner', lazy=True)
+    rolls = db.relationship('Roll', backref='owner', lazy=True)
 
-class Role(db.Model):
+class Roll(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-
-    # Neu: Metadaten
     film_manufacturer = db.Column(db.String(50))
     film_type = db.Column(db.String(50))
     iso = db.Column(db.Integer)
-
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    images = db.relationship('Image', backref='role', lazy=True)
+    images = db.relationship('Image', backref='roll', lazy=True)
 
 class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,7 +25,7 @@ class Image(db.Model):
     aperture = db.Column(db.String(50))
     image_file = db.Column(db.String(200))   # optionales Upload
     frame_number = db.Column(db.Integer)
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+    roll_id = db.Column(db.Integer, db.ForeignKey('roll.id'))
     camera_id = db.Column(db.Integer, db.ForeignKey('camera.id'))
     lens_id = db.Column(db.Integer, db.ForeignKey('lens.id'))
     filter_id = db.Column(db.Integer, db.ForeignKey('filter.id'))
